@@ -1,15 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SmartcaptchaService {
-  constructor(private readonly httpService: HttpService) {}
+  private readonly SMARTCAPTCHA_SERVER_KEY: string;
+
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {
+    this.SMARTCAPTCHA_SERVER_KEY = this.configService.get<string>(
+      'SMARTCAPTCHA_SERVER_KEY',
+    );
+  }
 
   async checkCaptcha(token: string): Promise<boolean> {
     const url = 'https://smartcaptcha.yandexcloud.net/validate';
     const params = {
-      secret: '',
+      secret: this.SMARTCAPTCHA_SERVER_KEY,
       token,
     };
 
