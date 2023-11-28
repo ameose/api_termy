@@ -22,7 +22,7 @@ cp .env_development .env
 
 **development**
 ```bash
-$ yarn run start:dev
+$ yarn start:dev
 ```
 
 ### Production
