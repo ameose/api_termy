@@ -10,15 +10,32 @@
 yarn
 ```
 
-## Запуск приложения
+## Development
+
+1. Создание конфига
+
+```bash
+cp .env_development .env
+```
+
+2. Запуск приложения
 
 **development**
 ```bash
 $ yarn run start:dev
 ```
 
-**production**
-```baash
+### Production
+
+1. Создание конфига
+
+```bash
+cp .env_production .env
+```
+
+2. Запуск приложения
+
+```bash
 yarn start:prod
 ```
 
