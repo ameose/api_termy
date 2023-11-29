@@ -6,6 +6,12 @@ import { redBright, blueBright, yellowBright } from 'console-log-colors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept',
+  });
+
   const PORT = process.env.Port || 3001;
   const HOST = process.env.HOST || 'localhost';
 
