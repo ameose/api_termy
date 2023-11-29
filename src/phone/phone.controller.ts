@@ -11,7 +11,11 @@ export class PhoneController {
   @ApiOperation({ summary: 'Получить код' })
   @ApiResponse({ status: 200, description: 'Код успешно отправлен' })
   @ApiResponse({ status: 400, description: 'Неверный запрос' })
-  @ApiBody({ description: 'Номер телефона', type: String })
+  @ApiBody({
+    description: 'Номер телефона',
+    type: String,
+    schema: { type: 'object', properties: { token: { type: 'string' } } },
+  })
   async sendCode(@Body('phone') phone: string): Promise<void> {
     const context = { phone: phone };
     // this.phoneService.setContext(context);
