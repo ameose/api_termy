@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { SmartcaptchaModule } from './smartcaptcha/smartcaptcha.module';
 import { ConfigModule } from '@nestjs/config';
 import { AnketaModule } from './anketa/anketa.module';
+import { PhoneModule } from './phone/phone.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AnketaModule } from './anketa/anketa.module';
     }),
     SmartcaptchaModule,
     AnketaModule,
+    PhoneModule,
   ],
   controllers: [AppController],
   providers: [AppService],
