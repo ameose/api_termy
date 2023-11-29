@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AnketaService } from './anketa.service';
 import { CreateAnketaDto } from './dto/create-anketa.dto';
 import { UpdateAnketaDto } from './dto/update-anketa.dto';
