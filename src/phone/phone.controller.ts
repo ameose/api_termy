@@ -8,13 +8,17 @@ export class PhoneController {
   constructor(private readonly phoneService: PhoneService) {}
 
   @Post('sendcode')
-  @ApiOperation({ summary: 'Получить код' })
+  @ApiOperation({
+    summary: 'Отправка кода подтверждения на телефон',
+    description:
+      'Принимает номер телефона и отправляет на него код подтверждения. Используется для верификации номера пользователя.',
+  })
   @ApiResponse({ status: 200, description: 'Код успешно отправлен' })
   @ApiResponse({ status: 400, description: 'Неверный запрос' })
   @ApiBody({
     description: 'Номер телефона',
     type: String,
-    schema: { type: 'object', properties: { token: { type: 'string' } } },
+    schema: { type: 'object', properties: { phone: { type: 'string' } } },
   })
   async sendCode(@Body('phone') phone: string): Promise<void> {
     const context = { phone: phone };
