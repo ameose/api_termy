@@ -19,7 +19,7 @@ async function bootstrap() {
     .setTitle('API Termy')
     .setDescription('Description')
     .setVersion('1.0')
-    .addTag('termy')
+    // .addTag('termy')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
