@@ -7,15 +7,15 @@ import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 export class PhoneController {
   constructor(private readonly phoneService: PhoneService) {}
 
-  @Post('getcode')
+  @Post('sendcode')
   @ApiOperation({ summary: 'Получить код' })
   @ApiResponse({ status: 200, description: 'Код успешно отправлен' })
   @ApiResponse({ status: 400, description: 'Неверный запрос' })
   @ApiBody({ description: 'Номер телефона', type: String })
-  async getCode(@Body('phone') phone: string): Promise<void> {
+  async sendCode(@Body('phone') phone: string): Promise<void> {
     const context = { phone: phone };
     // this.phoneService.setContext(context);
     // console.log(this.phoneService.getContext());
-    await this.phoneService.getCode(context.phone);
+    await this.phoneService.sendCode(context.phone);
   }
 }
