@@ -68,9 +68,15 @@ export class SmartcaptchaController {
     description: 'Верификация успешна (true) или неуспешна (false)',
   })
   @ApiResponse({ status: 400, description: 'Неверный запрос, отсутствует код' })
-  async verifyPhone(@Body('code') code: string): Promise<boolean> {
-    const generatedCode = await this.phoneService.getGeneratedCode();
-    console.log(`${generatedCode} ${code}`);
-    return code === generatedCode;
+  async verifyPhone(
+    @Body('code') code: string,
+    @Body('phone') phone: string,
+  ): Promise<boolean> {
+    const data = await this.phoneService.getGeneratedCode();
+    console.log(`${data[0]} ${code}`);
+    console.log(`${data[1]} ${phone}`);
+    if (data[1] === phone) {
+      return data[0].includes(code);
+    } else return false;
   }
 }
