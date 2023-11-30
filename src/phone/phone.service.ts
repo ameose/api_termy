@@ -11,6 +11,8 @@ export class PhoneService {
   ) {}
 
   private generatedCode: string;
+  private userPhone: string;
+  private context: any;
 
   private generateCode(): void {
     this.generatedCode = Math.floor(
@@ -41,5 +43,20 @@ export class PhoneService {
     return response$
       .pipe(map((response) => response.data.status === 'ok'))
       .toPromise();
+  }
+
+  async getGeneratedCode(): Promise<string[]> {
+    return [this.generatedCode, this.userPhone];
+  }
+
+  setContext(generatedcode: string, userphone: string) {
+    this.context = {
+      userPhone: userphone,
+      generatedCode: generatedcode,
+    };
+  }
+
+  getContext() {
+    return this.context;
   }
 }
