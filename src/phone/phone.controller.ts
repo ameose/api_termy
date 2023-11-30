@@ -26,4 +26,27 @@ export class PhoneController {
     // console.log(this.phoneService.getContext());
     await this.phoneService.sendCode(context.phone);
   }
+
+  @Post('check')
+  @ApiOperation({
+    summary: 'Проверка кода подтверждения',
+    description:
+      'Принимает код подтверждения и проверяет его соответствие сгенерированному коду. Используется для верификации номера телефона пользователя.',
+  })
+  @ApiResponse({ status: 200, description: 'Код подтверждения верен' })
+  @ApiResponse({
+    status: 400,
+    description: 'Неверный запрос или код подтверждения',
+  })
+  @ApiBody({
+    description: 'Код подтверждения',
+    type: String,
+    schema: { type: 'object', properties: { code: { type: 'string' } } },
+  })
+  async check(@Body('code') code: string): Promise<boolean> {
+    const generatedCode = await this.phoneService.getGeneratedCode();
+    // console.log(`${generatedCode} ${code}`);
+
+    return code === generatedCode;
+  }
 }
