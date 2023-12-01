@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { SmartcaptchaService } from './smartcaptcha.service';
 import { ApiBody, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PhoneService } from '../phone/phone.service';
@@ -39,10 +39,18 @@ export class SmartcaptchaController {
     @Body('token') token: string,
     @Body('phone') phone: string,
   ) {
-    if (await this.smartcaptchaService.checkCaptcha(token)) {
-      return await this.phoneService.sendCode(phone);
+    const isCaptchaValid = await this.smartcaptchaService.checkCaptcha(token);
+    if (isCaptchaValid) {
+      const sendCodeResult = await this.phoneService.sendCode(phone);
+      if (!sendCodeResult) {
+        // Если отправка кода не удалась, бросаем исключение
+        throw new BadRequestException('Ошибка при отправке кода');
+      }
+      return sendCodeResult;
+    } else {
+      // Если проверка капчи не прошла, бросаем исключение
+      throw new BadRequestException('Неверный токен капчи');
     }
-    return await this.smartcaptchaService.checkCaptcha(token);
   }
 
   @Post('verify-phone')
