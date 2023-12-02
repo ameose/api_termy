@@ -9,9 +9,9 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'http://localhost:5173/',
-      'http://termy.honc.ru/',
-      'https://termy.honc.ru/',
+      'http://localhost:5173',
+      'http://termy.honc.ru',
+      'https://termy.honc.ru',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
