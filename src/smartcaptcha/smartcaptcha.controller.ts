@@ -30,10 +30,37 @@ export class SmartcaptchaController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Код успешно отправлен' })
+  @ApiResponse({
+    status: 200,
+    description: 'Код успешно отправлен',
+    schema: {
+      type: 'object',
+      properties: {
+        result: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              code: { type: 'string', example: 'OK' },
+              messageId: { type: 'string', example: '3783075451500323712' },
+              segmentsId: { type: 'null', example: null },
+            },
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 400,
     description: 'Неверный токен или ошибка при отправке кода',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Неверный токен капчи' },
+        error: { type: 'string', example: 'Bad Request' },
+        statusCode: { type: 'integer', example: 400 },
+      },
+    },
   })
   async checkCaptcha(
     @Body('token') token: string,
@@ -51,40 +78,5 @@ export class SmartcaptchaController {
       // Если проверка капчи не прошла, бросаем исключение
       throw new BadRequestException('Неверный токен капчи');
     }
-  }
-
-  @Post('verify-phone')
-  @ApiOperation({
-    summary: 'Проверка кода, отправленного на телефон',
-    description:
-      'Сравнивает предоставленный код с кодом, сгенерированным на сервере, для верификации номера телефона.',
-  })
-  @ApiBody({
-    description: 'Тело запроса для верификации телефона',
-    schema: {
-      type: 'object',
-      properties: {
-        code: {
-          type: 'string',
-          description: 'Код для верификации, отправленный на телефон',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Верификация успешна (true) или неуспешна (false)',
-  })
-  @ApiResponse({ status: 400, description: 'Неверный запрос, отсутствует код' })
-  async verifyPhone(
-    @Body('code') code: string,
-    @Body('phone') phone: string,
-  ): Promise<boolean> {
-    const data = await this.phoneService.getGeneratedCode();
-    console.log(`${data[0]} ${code}`);
-    console.log(`${data[1]} ${phone}`);
-    if (data[1] === phone) {
-      return data[0].includes(code);
-    } else return false;
   }
 }
