@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class PhoneService {
@@ -23,17 +24,18 @@ export class PhoneService {
     const generatedCode = this.generateCode();
     const data = this.prepareMessageData(phone, generatedCode);
     const headers = this.prepareHeaders();
-    const response = {
-      result: [
-        {
-          code: 'OK',
-          messageId: '3782758768290128768',
-          segmentsId: null,
-        },
-      ],
-    };
-    return response;
-    // return this.sendHttpRequest(data, headers);
+    // Тестовые данные
+    // const response = {
+    //   result: [
+    //     {
+    //       code: 'OK',
+    //       messageId: '3782758768290128768',
+    //       segmentsId: null,
+    //     },
+    //   ],
+    // };
+    // return response;
+    return this.sendHttpRequest(data, headers);
   }
 
   private prepareMessageData(phone: string, code: string) {
@@ -48,34 +50,32 @@ export class PhoneService {
     };
   }
 
-  private async sendHttpRequest(data: any, headers: any): Promise<string> {
+  private async sendHttpRequest(data: any, headers: any): Promise<object> {
     const url = this.configService.get('PHONE_API_URL');
-
-    const response = {
-      result: [
-        {
-          code: 'OK',
-          messageId: '3782758768290128768',
-          segmentsId: null,
-        },
-      ],
-    };
-
-    return JSON.stringify(response);
-    // try {
-    //   const response = await this.httpService
-    //     .post(url, data, { headers })
-    //     .toPromise();
-    //   return response.data.status === 'ok';
-    // } catch (error) {
-    //   console.error('Ошибка при отправке кода:', error);
-    //   return false;
-    // }
+    console.log(url);
+    console.log(headers);
+    console.log(data);
+    try {
+      const response = await this.httpService
+        .post(url, data, { headers })
+        .toPromise();
+      return response.data;
+    } catch (error) {
+      console.error('Ошибка при отправке кода:', error);
+      throw new HttpException(
+        'Ошибка при отправке запроса',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   private prepareHeaders() {
+    const key = this.configService.get('PHONE_AUTHORIZATON_KEY');
+    console.log("ключ");
+    console.log(key);
     return {
-      Authorization: `Key ${this.configService.get('PHONE_AUTHORIZATON_KEY')}`,
+      'Content-Type': 'application/json',
+      Authorization: `Key ${key}`,
     };
   }
 
