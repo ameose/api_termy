@@ -20,7 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { SendAnketaDto } from './dto/send-anketa.dto';
 import { GetAnketaDto } from './dto/get-anketa.dto';
-import { AnketaResponseDto } from './dto/anketa-response.dto';
+import { AnketaSuccessResponseDto } from './dto/anketa-success-response.dto';
+import { formatPhoneNumber } from '../utils/phone-formatter';
 
 interface Child {
   id: string;
@@ -67,18 +68,28 @@ export class AnketaController {
   @ApiOkResponse({
     status: 200,
     description: 'Анкета успешно получена',
-    type: AnketaResponseDto,
+    type: AnketaSuccessResponseDto,
   })
   @ApiBadRequestResponse({ description: 'Неверный запрос' })
   @ApiNotFoundResponse({ description: 'Анкета не найдена' })
   @ApiBody({ type: GetAnketaDto })
   @Post('getAnketa')
+  // async getAnketa(@Body('phone') phone: string) {
   async getAnketa(@Body() getAnketaDto: GetAnketaDto) {
-    // Очистка номера телефона от нецифровых символов
     const phone = getAnketaDto.phone.replace(/\D/g, '');
+    if (phone.length !== 11) {
+      throw new HttpException(
+        'Телефон должен состоять из 11 цифр',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     // Формирование URL с использованием очищенного номера телефона
-    const url = `${this.configService.get('API_URL')}/Anketa/${phone}`;
+    const formattedPhone = formatPhoneNumber(phone);
+
+    const url = `${this.configService.get('API_URL')}/Anketa/${formattedPhone}`;
+
+    // return getAnketaDto.phone;
 
     try {
       const response = await this.http.get(url).toPromise();
