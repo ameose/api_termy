@@ -1,15 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-class ChildDto {
-  @ApiProperty({ description: 'ID ребенка' })
-  id: string;
-
-  @ApiProperty({ description: 'Имя ребенка' })
-  name: string;
-
-  @ApiProperty({ description: 'Дата рождения ребенка' })
-  birthday: string;
-}
+import { SendChildDto } from './send-child.dto';
 
 export class SendAnketaDto {
   @ApiProperty({ description: 'Номер анкеты' })
@@ -24,8 +14,8 @@ export class SendAnketaDto {
   @ApiProperty({ description: 'Дата рождения' })
   birthday: string;
 
-  @ApiProperty({ description: 'Список детей', type: [ChildDto] })
-  children: ChildDto[];
+  @ApiProperty({ description: 'Список детей', type: [SendChildDto] })
+  children: SendChildDto[];
 
   @ApiProperty({ description: 'Дата доступа' })
   dateAccess: string;
