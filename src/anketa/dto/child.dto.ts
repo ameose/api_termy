@@ -10,9 +10,9 @@ export class ChildDto {
   @ApiProperty({ description: 'Дата рождения ребенка' })
   birthday: string;
 
-  @ApiProperty({ description: 'Полное имя и возраст ребенка', required: false })
-  fullName?: string;
+  @ApiProperty({ description: 'Полное имя и возраст ребенка' })
+  fullName: string;
 
-  @ApiProperty({ description: 'Возраст ребенка', required: false })
-  age?: string;
+  @ApiProperty({ description: 'Возраст ребенка' })
+  age: string;
 }
