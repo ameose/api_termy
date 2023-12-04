@@ -20,11 +20,12 @@ export class PhoneController {
     type: String,
     schema: { type: 'object', properties: { phone: { type: 'string' } } },
   })
-  async sendCode(@Body('phone') phone: string): Promise<void> {
+  async sendCode(@Body('phone') phone: string): Promise<object> {
     const context = { phone: phone };
     // this.phoneService.setContext(context);
     // console.log(this.phoneService.getContext());
-    await this.phoneService.sendCode(context.phone);
+    const response = await this.phoneService.sendCode(context.phone);
+    return response;
   }
 
   @Post('check')

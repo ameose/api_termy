@@ -1,48 +1,82 @@
 import { Injectable } from '@nestjs/common';
-import { map } from 'rxjs/operators';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PhoneService {
+  private generatedCode: string;
+  private userPhone: string;
+  private context: any;
+
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
 
-  private generatedCode: string;
-  private userPhone: string;
-  private context: any;
-
-  private generateCode(): void {
-    this.generatedCode = Math.floor(
-      Math.random() * (9999 - 1000 + 1) + 1000,
-    ).toString();
+  private generateCode(): string {
+    const code = Math.floor(Math.random() * 9000 + 1000).toString();
+    this.generatedCode = code; // сохраняем код в переменной экземпляра, если это необходимо
+    return code; // возвращаем сгенерированный код
   }
 
-  async sendCode(phone: string): Promise<boolean> {
-    this.generateCode();
+  async sendCode(phone: string): Promise<object> {
+    const generatedCode = this.generateCode();
+    const data = this.prepareMessageData(phone, generatedCode);
+    const headers = this.prepareHeaders();
+    const response = {
+      result: [
+        {
+          code: 'OK',
+          messageId: '3782758768290128768',
+          segmentsId: null,
+        },
+      ],
+    };
+    return response;
+    // return this.sendHttpRequest(data, headers);
+  }
 
-    // console.log(`сгенерированный код ${this.generatedCode}`);
-    const url = `${this.configService.get('PHONE_API_URL')}`;
-    const data = {
+  private prepareMessageData(phone: string, code: string) {
+    return {
       messages: [
         {
           from: this.configService.get('SENDERS_NAME'),
           to: phone,
-          text: `Ваш код ЛЕТО: ${this.generatedCode}`,
+          text: `Ваш код ЛЕТО: ${code}`,
         },
       ],
     };
-    const headers = {
-      Authorization: `Key ${this.configService.get('PHONE_AUTHORISATON_KEY')}`,
+  }
+
+  private async sendHttpRequest(data: any, headers: any): Promise<string> {
+    const url = this.configService.get('PHONE_API_URL');
+
+    const response = {
+      result: [
+        {
+          code: 'OK',
+          messageId: '3782758768290128768',
+          segmentsId: null,
+        },
+      ],
     };
 
-    const response$ = this.httpService.post(url, data, { headers });
+    return JSON.stringify(response);
+    // try {
+    //   const response = await this.httpService
+    //     .post(url, data, { headers })
+    //     .toPromise();
+    //   return response.data.status === 'ok';
+    // } catch (error) {
+    //   console.error('Ошибка при отправке кода:', error);
+    //   return false;
+    // }
+  }
 
-    return response$
-      .pipe(map((response) => response.data.status === 'ok'))
-      .toPromise();
+  private prepareHeaders() {
+    return {
+      Authorization: `Key ${this.configService.get('PHONE_AUTHORIZATON_KEY')}`,
+    };
   }
 
   async getGeneratedCode(): Promise<string[]> {
