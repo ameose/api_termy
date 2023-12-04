@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ChildDto } from './child.dto'; // Убедитесь, что путь к ChildDto правильный
+import { ChildDto } from './child.dto';
 
 export class ResultDto {
   @ApiProperty({ description: 'Уникальный номер анкеты' })
