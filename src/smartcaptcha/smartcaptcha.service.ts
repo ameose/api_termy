@@ -46,7 +46,7 @@ export class SmartcaptchaService {
     const smsCount = await this.smartcaptchaRepository.countSmsForToday(phone);
     // console.log(smsCount);
     // Количеств отправленных смс
-    if (smsCount >= 10) {
+    if (smsCount >= 15) {
       throw new BadRequestException(
         'Лимит SMS исчерпан. Повторите попытку через 24 часа.',
       );
@@ -61,7 +61,5 @@ export class SmartcaptchaService {
     const generateCode = this.phoneService.getGeneratedCode();
 
     await this.smartcaptchaRepository.createSmsRecord(phone, generateCode);
-
-    return smsCount;
   }
 }

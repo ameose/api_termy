@@ -25,7 +25,7 @@ export class PhoneRepository {
     }
 
     const codeAge = new Date().getTime() - smsEntry.created_at.getTime();
-    const fifteenMinutes = 5 * 60 * 1000;
+    const fifteenMinutes = 15 * 60 * 1000;
 
     if (codeAge > fifteenMinutes) {
       throw new BadRequestException('Код устарел.');
