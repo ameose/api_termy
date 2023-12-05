@@ -18,16 +18,11 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
-import { SendAnketaDto } from './dto/send-anketa.dto';
+import { CreateAnketaDto } from './dto/create-anketa.dto';
 import { GetAnketaDto } from './dto/get-anketa.dto';
 import { AnketaSuccessResponseDto } from './dto/anketa-success-response.dto';
 import { formatPhoneNumber } from '../utils/phone-formatter';
-
-interface Child {
-  id: string;
-  name: string;
-  birthday: string;
-}
+import { CreateChildDto } from './dto/create-child.dto';
 
 @ApiTags('anketa')
 @Controller('anketa')
@@ -39,32 +34,40 @@ export class AnketaController {
     private readonly configService: ConfigService,
   ) {}
 
-  @ApiOperation({ summary: 'Отправка анкеты' })
-  @ApiResponse({ status: 200, description: 'Анкета успешно отправлена' })
-  @ApiBadRequestResponse({ description: 'Неверный запрос' })
-  @ApiBody({ type: SendAnketaDto })
+  @ApiOperation({
+    summary: 'Добавление анкеты пользователя',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Анкета успешно создана',
+  })
+  @ApiBadRequestResponse({
+    description: 'Неверный запрос',
+  })
+  @ApiBody({ type: CreateAnketaDto })
   @Post('sendAnketa')
   async sendAnketa(
-    @Body('number') number: number,
     @Body('phone') phone: string,
     @Body('name') name: string,
     @Body('birthday') birthday: string,
-    @Body('children') children: Child[],
+    @Body('children') children: CreateChildDto[],
     @Body('dateAccess') dateAccess: string,
     @Body('isPromo') isPromo: boolean,
+    @Body('sourceAnketa') sourceAnketa: number,
   ) {
-    await this.anketaService.sendAnketa(
-      number,
+    const res = await this.anketaService.sendAnketa(
       phone,
       name,
       birthday,
       children,
       dateAccess,
       isPromo,
+      sourceAnketa,
     );
+    return res;
   }
 
-  @ApiOperation({ summary: 'Получение анкеты' })
+  @ApiOperation({ summary: 'Последняя анкета пользователя по номеру телефона' })
   @ApiOkResponse({
     status: 200,
     description: 'Анкета успешно получена',
