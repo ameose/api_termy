@@ -1,13 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { map } from 'rxjs/operators';
-
-interface Child {
-  id: string;
-  name: string;
-  birthday: string;
-}
+import { CreateChildDto } from './dto/create-child.dto';
 
 @Injectable()
 export class AnketaService {
@@ -17,29 +11,33 @@ export class AnketaService {
   ) {}
 
   async sendAnketa(
-    number: number,
     phone: string,
     name: string,
     birthday: string,
-    children: Child[],
+    children: CreateChildDto[],
     dateAccess: string,
     isPromo: boolean,
-  ): Promise<boolean> {
+    sourceAnketa: number,
+  ): Promise<any> {
     const url = `${this.configService.get('API_URL')}/Anketa`;
+
     const data = {
-      number: number,
       phone: phone,
       name: name,
       birthday: birthday,
       children: children,
       dateAccess: dateAccess,
       isPromo: isPromo,
+      sourceAnketa: sourceAnketa,
     };
 
-    const response$ = this.httpService.post(url, data);
-
-    return response$
-      .pipe(map((response) => response.data.status === 'ok'))
-      .toPromise();
+    try {
+      const response = await this.httpService.post(url, data).toPromise();
+      return response.data;
+    } catch (error) {
+      // Обработка ошибок
+      console.error('Ошибка при отправке запроса:', error);
+      throw error; // или можно вернуть ошибку в качестве ответа
+    }
   }
 }
