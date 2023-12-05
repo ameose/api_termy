@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ChildDto } from './child.dto';
+import { GetChildDto } from './get-child.dto';
 
 export class ResultDto {
   @ApiProperty({ description: 'Уникальный номер анкеты' })
@@ -14,8 +14,8 @@ export class ResultDto {
   @ApiProperty({ description: 'Дата рождения' })
   birthday: string;
 
-  @ApiProperty({ description: 'Список детей', type: [ChildDto] })
-  children: ChildDto[];
+  @ApiProperty({ description: 'Список детей', type: [GetChildDto] })
+  children: GetChildDto[];
 
   @ApiProperty({ description: 'Дата доступа к анкете' })
   dateAccess: string;
