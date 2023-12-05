@@ -62,7 +62,7 @@ export class PhoneController {
     schema: {
       type: 'object',
       properties: {
-        code: {
+        userCode: {
           type: 'string',
           description: 'Код для верификации, отправленный на телефон',
         },
@@ -70,19 +70,17 @@ export class PhoneController {
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Верификация успешна (true) или неуспешна (false)',
   })
-  @ApiResponse({ status: 400, description: 'Неверный запрос, отсутствует код' })
+  @ApiResponse({
+    status: 400,
+    description: 'Неверный запрос, отсутствует код',
+  })
   async verifyPhone(
-    @Body('code') code: string,
+    @Body('userCode') userCode: string,
     @Body('phone') phone: string,
-  ): Promise<boolean> {
-    const data = await this.phoneService.getGeneratedCode();
-    console.log(`${data[0]} ${code}`);
-    console.log(`${data[1]} ${phone}`);
-    if (data[1] === phone) {
-      return data[0].includes(code);
-    } else return false;
+  ): Promise<object> {
+    return this.phoneService.verifyPhone(phone, userCode);
   }
 }

@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { PhoneRepository } from './repository/phone.repository';
 
 @Injectable()
 export class PhoneService {
@@ -12,6 +13,7 @@ export class PhoneService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    private readonly phoneRepository: PhoneRepository,
   ) {}
 
   private generateCode(): string {
@@ -36,6 +38,10 @@ export class PhoneService {
     // };
     // return response;
     return this.sendHttpRequest(data, headers);
+  }
+
+  getGeneratedCode(): string {
+    return this.generatedCode;
   }
 
   private prepareMessageData(phone: string, code: string) {
@@ -71,7 +77,7 @@ export class PhoneService {
 
   private prepareHeaders() {
     const key = this.configService.get('PHONE_AUTHORIZATON_KEY');
-    console.log("ключ");
+    console.log('ключ');
     console.log(key);
     return {
       'Content-Type': 'application/json',
@@ -79,9 +85,9 @@ export class PhoneService {
     };
   }
 
-  async getGeneratedCode(): Promise<string[]> {
-    return [this.generatedCode, this.userPhone];
-  }
+  // async getGeneratedCode(): Promise<string[]> {
+  //   return [this.generatedCode, this.userPhone];
+  // }
 
   setContext(generatedcode: string, userphone: string) {
     this.context = {
@@ -92,5 +98,14 @@ export class PhoneService {
 
   getContext() {
     return this.context;
+  }
+
+  async verifyPhone(
+    phone: string,
+    userCode: string,
+  ): Promise<{ success: boolean }> {
+    await this.phoneRepository.verifyCode(phone, userCode);
+
+    return { success: true };
   }
 }
