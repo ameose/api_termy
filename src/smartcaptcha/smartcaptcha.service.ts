@@ -61,5 +61,7 @@ export class SmartcaptchaService {
     const generateCode = this.phoneService.getGeneratedCode();
 
     await this.smartcaptchaRepository.createSmsRecord(phone, generateCode);
+
+    return sendCodeResult;
   }
 }
