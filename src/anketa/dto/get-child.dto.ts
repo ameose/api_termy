@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ChildDto {
+export class GetChildDto {
   @ApiProperty({ description: 'Уникальный идентификатор ребенка' })
   id: string;
 
