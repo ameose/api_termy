@@ -104,8 +104,14 @@ export class PhoneService {
     phone: string,
     userCode: string,
   ): Promise<{ success: boolean }> {
-    await this.phoneRepository.verifyCode(phone, userCode);
-
-    return { success: true };
+    try {
+      await this.phoneRepository.verifyCode(phone, userCode);
+      return { success: true };
+    } catch (error) {
+      throw new HttpException(
+        'Неизвестная ошибка',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
