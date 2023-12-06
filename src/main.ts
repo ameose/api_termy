@@ -2,15 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { redBright, blueBright, yellowBright } from 'console-log-colors';
+import { corsOptionsDelegate } from './cors.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    origin: ['*'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept',
-  });
+  app.enableCors(corsOptionsDelegate);
 
   const PORT = process.env.Port || 3001;
   const HOST = process.env.HOST || 'localhost';
