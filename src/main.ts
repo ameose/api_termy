@@ -11,7 +11,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       'http://termy.honc.ru',
-      'https://termy.honc.ru',
+      'https://termy-leto.vercel.app/',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
