@@ -42,11 +42,12 @@ export class SmartcaptchaService {
       throw new BadRequestException('Неверный токен капчи');
     }
 
-    // Проверка лимита отправленных SMS
+    // Получение дневного лимита SMS и проверка количества отправленных SMS
+    const dailyLimit = await this.smartcaptchaRepository.getDailySmsLimit();
     const smsCount = await this.smartcaptchaRepository.countSmsForToday(phone);
     // console.log(smsCount);
     // Количеств отправленных смс
-    if (smsCount >= 15) {
+    if (smsCount >= dailyLimit) {
       throw new BadRequestException(
         'Лимит SMS исчерпан. Повторите попытку через 24 часа.',
       );

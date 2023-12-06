@@ -32,4 +32,15 @@ export class SmartcaptchaRepository {
 
     return count;
   }
+
+  async getDailySmsLimit(): Promise<number> {
+    const setting = await this.prisma.smsSettings.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    // Возвращаем 5 как значение по умолчанию, если настройки не найдены
+    return setting ? setting.dailyLimit : 5;
+  }
 }
