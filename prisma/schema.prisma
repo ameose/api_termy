@@ -10,33 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  fullName       String
-  login          String   @unique
-  password       String
-  hashedRT       String?
-  isAuthAllowed  Boolean  @default(false)
-  lastTimeActive DateTime
-  createdAt      DateTime @default(now())
-}
-
-model Logs {
-  id          Int      @id @default(autoincrement())
-  login       String
-  browserInfo String
-  ip          String
-  createdAt   DateTime @default(now())
-}
-
-model Admin {
-  id       Int     @id @default(autoincrement())
-  password String
-  login    String  @unique
-  hashedRT String?
-}
-
 model Sms {
   id         Int      @id @default(autoincrement())
   code       String
@@ -44,4 +17,10 @@ model Sms {
   active     Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime
+}
+
+model SmsSettings {
+  id         Int      @id @default(autoincrement())
+  dailyLimit Int
+  createdAt  DateTime @default(now())
 }
