@@ -1,7 +1,6 @@
 // cors.config.ts
 
 export const prodOrigins = [
-  'http://anketa.letotermy.ru',
   'https://anketa.letotermy.ru',
   'http://termy.honc.ru',
   'https://termy.honc.ru',
