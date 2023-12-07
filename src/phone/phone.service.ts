@@ -100,18 +100,13 @@ export class PhoneService {
     return this.context;
   }
 
-  async verifyPhone(
-    phone: string,
-    userCode: string,
-  ): Promise<{ success: boolean }> {
-    try {
-      await this.phoneRepository.verifyCode(phone, userCode);
-      return { success: true };
-    } catch (error) {
-      throw new HttpException(
-        'Неизвестная ошибка',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+  async verifyPhone(phone: string, userCode: string): Promise<any> {
+    const isValid = await this.phoneRepository.verifyCode(phone, userCode);
+
+    if (isValid) {
+      return { statusCode: 200, message: 'Код верен' };
+    } else {
+      throw new BadRequestException('Неверный код или код устарел');
     }
   }
 }

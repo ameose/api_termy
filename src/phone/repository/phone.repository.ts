@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PhoneRepository {
   constructor(private prisma: PrismaService) {}
 
-  async verifyCode(phone: string, userCode: string): Promise<void> {
+  async verifyCode(phone: string, userCode: string): Promise<boolean> {
     const smsEntry = await this.prisma.sms.findFirst({
       where: {
         phone,
@@ -40,5 +40,7 @@ export class PhoneRepository {
         updated_at: new Date(),
       },
     });
+
+    return true;
   }
 }
