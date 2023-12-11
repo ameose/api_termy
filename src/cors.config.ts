@@ -1,15 +1,13 @@
 // cors.config.ts
 
-export const prodOrigins = [
-  'https://anketa.letotermy.ru',
-  'http://termy.honc.ru',
-  'https://termy.honc.ru',
-];
+export const prodOrigins = ['https://anketa.letotermy.ru'];
 
 const devOrigins = [
   'http://localhost:5137',
   'http://localhost:3000',
   'https://termy-leto.vercel.app',
+  'http://termy.honc.ru',
+  'https://termy.honc.ru',
 ];
 
 const allowedOrigins =
